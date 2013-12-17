@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Interesting-apps : Monty Hall - Not mine, just liked it." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Interesting-apps</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jaredstoker/Interesting-Apps">View on GitHub</a>
+
+          <h1 id="project_title">Interesting-apps</h1>
+          <h2 id="project_tagline">Monty Hall - Not mine, just liked it.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jaredstoker/Interesting-Apps/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jaredstoker/Interesting-Apps/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>//Monty Hall - Java</p>
+
+<p>public class MontyHall {</p>
+
+<pre><code>// How many doors.
+static final int Doors = 4;
+
+// Prizes.
+enum Prize {
+
+    Goat,
+    Car;
+}
+
+public static void main(String[] args) throws InterruptedException {
+    // The number of times we would have won if we switched.
+    int winWhenSwitched = 0;
+    // The number of times we would have won if we didn't switch.
+    int winWhenNotSwitched = 0;
+    // The number of times we would have lost both ways.
+    int lost = 0;
+
+    // n doors.
+    Prize doors[] = new Prize[Doors];
+    // N Tests
+    for (int i = 0; i &lt; 100000; i++) {
+        // Put a car behind just one door.
+        pickRandomDoorForCar(doors);
+        // Make my first choice.
+        int firstChoice = randomDoor();
+        // Open one remaining goat door. 
+        int goatDoorOpened = openOneGoatDoor(doors, firstChoice);
+        // What would have been my second choice - if I switched?
+        int secondChoice = makeSecondChoice(doors, firstChoice, goatDoorOpened);
+        // Count wins/losses.
+        if (doors[firstChoice] == Prize.Car) {
+            // We would have won without switching!
+            winWhenNotSwitched += 1;
+        } else {
+            // We win if we switched to the car!
+            if (doors[secondChoice] == Prize.Car) {
+                // We picked right!
+                winWhenSwitched += 1;
+            } else {
+                // Bad choice.
+                lost += 1;
+            }
+        }
+    }
+    System.out.println("Wins when switched = " + winWhenSwitched);
+    System.out.println("Wins when not switched = " + winWhenNotSwitched);
+    System.out.println("Lost = " + lost);
+    System.out.println("Proportion = " + ((double) winWhenSwitched / (double) winWhenNotSwitched));
+}
+
+// Open one door exposing a Goat.
+private static int openOneGoatDoor(Prize doors[], int firstChoice) {
+    for (int j = 0; j &lt; Doors; j++) {
+        // Not the one already picked and must contain goat.
+        if (j != firstChoice &amp;&amp; doors[j] == Prize.Goat) {
+            // Can only be one of them.
+            return j;
+        }
+    }
+    // Should never get here - TODO - Throw an exception here.
+    return -1;
+}
+
+// Make a second choice - avoid first choice and opened door.
+private static int makeSecondChoice(Prize[] doors, int firstChoice, int goatDoorOpened) {
+    int secondChoice = randomDoor();
+    while (secondChoice == firstChoice || secondChoice == goatDoorOpened) {
+        // Try again.
+        secondChoice = randomDoor();
+    }
+    return secondChoice;
+}
+
+// Pick a random door and put a Car there.
+private static void pickRandomDoorForCar(Prize[] doors) {
+    // Start all goats.
+    Arrays.fill(doors, Prize.Goat);
+    // Pick a random for the car.
+    doors[randomDoor()] = Prize.Car;
+}
+// Start my random number generator.
+static final Random random = new Random(System.currentTimeMillis());
+
+// Pick a random door.
+private static int randomDoor() {
+    return random.nextInt(Doors);
+}
+</code></pre>
+
+<p>}</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Interesting-apps maintained by <a href="https://github.com/jaredstoker">jaredstoker</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
